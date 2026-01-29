@@ -73,7 +73,7 @@ zip function.zip lambda_function.py
 # Create the Lambda function
 aws lambda create-function \
     --function-name hello-lambda \
-    --runtime python3.9 \
+    --runtime python3.12 \
     --role arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_LAMBDA_ROLE \
     --handler lambda_function.lambda_handler \
     --zip-file fileb://function.zip \
