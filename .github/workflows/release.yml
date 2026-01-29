@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build:
+    # if: github.event_name == 'release'
+    uses: kvncont/workflows/python-ci.yml@feature/python-lambdas-workflows
+    with:
+      python-version: "3.14"
+      zip-name: "lambda-${{ github.event.release.tag_name }}.zip"
+      artifact-name: "lambda-${{ github.event.release.tag_name }}"
+      run-tests: true
+      run-linting: true
+
+  upload-to-release:
+    needs: build
+    # if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "lambda-${{ github.event.release.tag_name }}"
+          path: ./dist
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./dist/*.zip
