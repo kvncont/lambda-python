@@ -1,0 +1,16 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@feature/python-lambdas-workflows
+    with:
+      python-version: 3.14
+      zip-name: lambda-${{ github.sha }}.zip
+      artifact-name: lambda-${{ github.sha }}
+      run-tests: true
+      run-linting: true
