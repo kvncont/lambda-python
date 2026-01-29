@@ -12,7 +12,6 @@ jobs:
       python-version: 3.14
       zip-name: lambda-${{ github.event.release.tag_name }}.zip
       artifact-name: lambda-${{ github.event.release.tag_name }}
-      requirements-file: requirements-dev.txt
       run-tests: false
       run-linting: false
 

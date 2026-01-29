@@ -12,5 +12,6 @@ jobs:
       python-version: 3.14
       zip-name: lambda-${{ github.sha }}.zip
       artifact-name: lambda-${{ github.sha }}
+      requirements-file: requirements-dev.txt
       run-tests: true
       run-linting: true
