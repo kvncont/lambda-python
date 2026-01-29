@@ -1,7 +1,7 @@
 import json
 from unittest.mock import patch
 
-from lambda_function import lambda_handler
+from src.lambda_function import lambda_handler
 
 
 def test_lambda_handler_with_env_variable():

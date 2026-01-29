@@ -1,6 +1,4 @@
 # AWS Lambda Python Requirements
+# Production dependencies only - these get packaged with the Lambda
 # No external dependencies required for the basic lambda function
 # Only Python standard library is used (os, json)
-
-# Development/Testing dependencies (optional)
-pytest>=7.0.0
