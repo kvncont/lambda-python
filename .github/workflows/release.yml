@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     # if: github.event_name == 'release'
-    uses: kvncont/workflows/python-ci.yml@feature/python-lambdas-workflows
+    uses: kvncont/workflows/.github/workflows/python-ci.yml@feature/python-lambdas-workflows
     with:
       python-version: "3.14"
       zip-name: "lambda-${{ github.event.release.tag_name }}.zip"
