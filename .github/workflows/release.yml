@@ -24,9 +24,9 @@ jobs:
       s3-prefix: releases/${{ github.event.release.tag_name }}
       artifact-name: lambda-${{ github.event.release.tag_name }}
       role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
-    # secrets:
-    #   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   upload-to-gh-release:
     needs: build
