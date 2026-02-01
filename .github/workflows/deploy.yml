@@ -3,24 +3,12 @@ name: Deploy Lambda Function
 on:
   workflow_dispatch:
     inputs:
-      action:
-        description: "Action to perform"
-        required: true
-        type: choice
-        options:
-          - deploy
-        default: deploy
       environment:
-        description: "Target environment"
+        description: Target environment
         required: true
-        type: choice
-        options:
-          - dev
-          - qa
-          - pre
-          - prod
+        type: environment
       release-tag:
-        description: "Release tag to deploy (e.g., v1.0.0)"
+        description: Release tag to deploy (e.g., v1.0.0)
         required: true
         type: string
 
@@ -29,12 +17,12 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     uses: ./.github/workflows/aws-lambda-cd.yml
     with:
-      lambda-name: "my-lambda-${{ inputs.environment }}"
-      artifact-name: "lambda-${{ inputs.release-tag }}"
-      zip-file: "lambda-${{ inputs.release-tag }}.zip"
-      env-file: "./config/${{ inputs.environment }}.json"
+      lambda-name: my-lambda-${{ inputs.environment }}
+      artifact-name: lambda-${{ inputs.release-tag }}
+      zip-file: lambda-${{ inputs.release-tag }}.zip
+      env-file: ./config/${{ inputs.environment }}.json
       publish-version: true
-      version-description: "Release ${{ inputs.release-tag }} deployed to ${{ inputs.environment }}"
+      version-description: Release ${{ inputs.release-tag }} deployed to ${{ inputs.environment }}
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
