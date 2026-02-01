@@ -1,6 +1,6 @@
 name: Deploy Lambda
 
-run-name: Deploy to ${{ inputs.environment || 'DEV' }} - ${{ inputs.release-tag || github.head_sha }}
+run-name: Deploy to ${{ inputs.environment || 'DEV' }} - ${{ inputs.release-tag || github.sha }}
 
 on:
   workflow_dispatch:
