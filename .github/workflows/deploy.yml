@@ -8,27 +8,15 @@ on:
         required: true
         type: environment
       release-tag:
-        description: Release tag to deploy (e.g., v1.0.0)
+        description: Release tag to deploy (e.g., 1.0.0)
         required: true
         type: string
 
 jobs:
-  download:
-    uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@feature/python-lambdas-workflows
-    with:
-      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
-      s3-file: lambda.zip
-      artifact-name: lambda-package
-
   deploy:
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
     with:
-      lambda-name: my-lambda-${{ inputs.environment }}
-      artifact-name: lambda-${{ inputs.release-tag }}
+      environment: ${{ inputs.environment }}
+      artifact-source: s3
+      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
       zip-file: lambda-${{ inputs.release-tag }}.zip
-      env-file: ./config/${{ inputs.environment }}.json
-      publish-version: true
-      version-description: Release ${{ inputs.release-tag }} deployed to ${{ inputs.environment }}
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
