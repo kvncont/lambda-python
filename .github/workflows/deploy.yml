@@ -29,7 +29,7 @@ jobs:
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
       run-id: ${{ github.event.workflow_run.id }}
-      version-description: "Deploy: CI/CD ${{ github.sha }}"
+      version-description: "Deploy: ${{ github.ref_name }} ${{ github.sha }}"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
