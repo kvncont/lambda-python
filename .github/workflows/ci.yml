@@ -17,6 +17,7 @@ jobs:
       run-linting: true
 
   deploy:
+    needs: build
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
     with:
       environment: DEV
