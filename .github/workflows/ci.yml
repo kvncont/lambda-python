@@ -15,3 +15,12 @@ jobs:
       requirements-file: requirements-dev.txt
       run-tests: true
       run-linting: true
+
+  deploy:
+    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
+    with:
+      environment: DEV
+      artifact-source: github
+      artifact-name: lambda-${{ github.sha }}
+      zip-file: lambda-${{ github.sha }}.zip
+      version-description: CI/CD ${{ github.sha }}
