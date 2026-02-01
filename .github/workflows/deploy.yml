@@ -13,9 +13,15 @@ on:
         type: string
 
 jobs:
+  download:
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@feature/python-lambdas-workflows
+    with:
+      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
+      s3-file: lambda.zip
+      artifact-name: lambda-package
+
   deploy:
-    if: github.event_name == 'workflow_dispatch'
-    uses: ./.github/workflows/aws-lambda-cd.yml
+    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
     with:
       lambda-name: my-lambda-${{ inputs.environment }}
       artifact-name: lambda-${{ inputs.release-tag }}
