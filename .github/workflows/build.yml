@@ -1,0 +1,30 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@feature/python-lambdas-workflows
+    with:
+      python-version: 3.14
+      zip-name: lambda-${{ github.sha }}.zip
+      artifact-name: lambda-${{ github.sha }}
+      requirements-file: requirements-dev.txt
+      run-tests: true
+      run-linting: true
+
+  # deploy:
+  #   needs: build
+  #   uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
+  #   with:
+  #     environment: DEV
+  #     artifact-source: github
+  #     artifact-name: lambda-${{ github.sha }}
+  #     zip-file: lambda-${{ github.sha }}.zip
+  #     version-description: CI/CD ${{ github.sha }}
+  #   secrets:
+  #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
