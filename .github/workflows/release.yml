@@ -15,6 +15,19 @@ jobs:
       run-tests: false
       run-linting: false
 
+  upload-to-s3:
+    needs: build
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@feature/python-lambdas-workflows
+    with:
+      environment: DEV
+      s3-bucket: ${{ vars.AWS_S3_BUCKET }}
+      s3-prefix: releases/${{ github.event.release.tag_name }}
+      artifact-name: lambda-${{ github.event.release.tag_name }}
+      role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
   upload-to-release:
     needs: build
     runs-on: ubuntu-latest
