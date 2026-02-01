@@ -1,8 +1,13 @@
 name: Deploy Lambda
 
-run-name: Deploy to ${{ inputs.environment || 'DEV' }} - ${{ inputs.release-tag || github.sha }}
+run-name: ${{ github.event_name == 'workflow_run' && format('Deploy [{0}] to DEV - {1}', github.ref_name, github.sha) || format('Deploy [release] to {0} - {1}', inputs.environment, inputs.release-tag) }}
 
 on:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+
   workflow_dispatch:
     inputs:
       environment:
@@ -13,11 +18,6 @@ on:
         description: Release tag to deploy (e.g., 1.0.0)
         required: true
         type: string
-  
-  workflow_run:
-    workflows: ["Build"]
-    types:
-      - completed
 
 jobs:
   deploy-main:
@@ -29,7 +29,7 @@ jobs:
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
       run-id: ${{ github.event.workflow_run.id }}
-      version-description: "Deploy: ${{ github.ref_name }} ${{ github.sha }}"
+      version-description: "Deploy [${{ github.ref_name }}]: ${{ github.sha }}"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -42,7 +42,7 @@ jobs:
       artifact-source: s3
       s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
       zip-file: lambda-${{ inputs.release-tag }}.zip
-      version-description: "Deploy: Release ${{ inputs.release-tag }}"
+      version-description: "Deploy [release]: ${{ inputs.release-tag }}"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
