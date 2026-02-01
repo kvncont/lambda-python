@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@feature/python-lambdas-workflows
+    uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@main
     with:
       python-version: 3.14
       zip-name: lambda-${{ github.event.release.tag_name }}.zip
@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         environment: [DEV, QA]
-    uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@feature/python-lambdas-workflows
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@main
     with:
       environment: ${{ matrix.environment }}
       s3-prefix: releases/${{ matrix.environment }}/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}

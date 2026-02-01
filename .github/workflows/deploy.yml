@@ -20,7 +20,7 @@ on:
 jobs:
   deploy-main:
     if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' }}
-    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
+    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: DEV
       artifact-source: github
@@ -34,7 +34,7 @@ jobs:
 
   deploy-release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
-    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@feature/python-lambdas-workflows
+    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: ${{ inputs.environment }}
       artifact-source: s3
