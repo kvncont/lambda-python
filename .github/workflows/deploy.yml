@@ -28,7 +28,7 @@ jobs:
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
       run-id: ${{ github.event.workflow_run.id }}
-      version-description: "Deploy [${{ github.ref_name }}]: ${{ github.sha }}"
+      version-description: "Deploy ${{ github.ref_name }}: [${{ github.sha }}]"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -53,7 +53,7 @@ jobs:
       environment: ${{ inputs.environment }}
       artifact-name: lambda-${{ inputs.release-tag }}
       zip-file: lambda-${{ inputs.release-tag }}.zip
-      version-description: "Deploy [release]: ${{ inputs.release-tag }}"
+      version-description: "Deploy release: [${{ inputs.release-tag }}]"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
