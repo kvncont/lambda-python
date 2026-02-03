@@ -39,7 +39,7 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
-      zip-file: lambda-${{ inputs.release-tag }}.zip
+      s3-file: lambda-${{ inputs.release-tag }}.zip
       artifact-name: lambda-${{ inputs.release-tag }}
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
