@@ -15,7 +15,7 @@ jobs:
       run-tests: false
       run-linting: false
       upload-artifact: true
-      environments: '["DEV", "QA"]'
+      environments: '["DEV","QA"]'
 
   upload-to-gh-release:
     needs: build
@@ -33,6 +33,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ./dist/*.zip
+
   # upload-to-aws-s3:
   #   needs: build
   #   strategy:
