@@ -16,6 +16,9 @@ jobs:
       run-linting: false
       upload-artifact: true
       environments: '["DEV","QA"]'
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   upload-to-gh-release:
     needs: build
