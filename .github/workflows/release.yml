@@ -14,11 +14,6 @@ jobs:
       artifact-name: lambda-${{ github.event.release.tag_name }}
       run-tests: false
       run-linting: false
-      upload-artifact: true
-      environments: '["DEV","QA"]'
-    secrets:
-      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   upload-to-gh-release:
     needs: build
@@ -37,16 +32,16 @@ jobs:
         with:
           files: ./dist/*.zip
 
-  # upload-to-aws-s3:
-  #   needs: build
-  #   strategy:
-  #     matrix:
-  #       environment: [DEV, QA]
-  #   uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@main
-  #   with:
-  #     environment: ${{ matrix.environment }}
-  #     s3-prefix: releases/${{ matrix.environment }}/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}
-  #     artifact-name: lambda-${{ github.event.release.tag_name }}
-  #   secrets:
-  #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  upload-to-aws-s3:
+    needs: build
+    strategy:
+      matrix:
+        environment: [DEV, QA]
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@main
+    with:
+      environment: ${{ matrix.environment }}
+      s3-prefix: releases/${{ matrix.environment }}/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}
+      artifact-name: lambda-${{ github.event.release.tag_name }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
