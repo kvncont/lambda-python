@@ -1,4 +1,4 @@
-name: Deploy Lambda
+name: Deploy
 
 run-name: ${{ github.event_name == 'workflow_run' && format('Deploy [{0}] to DEV - {1}', github.ref_name, github.sha) || format('Deploy [release] to {0} - {1}', inputs.environment, inputs.release-tag) }}
 
