@@ -25,7 +25,6 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: DEV
-      artifact-source: github
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
       run-id: ${{ github.event.workflow_run.id }}
@@ -34,13 +33,25 @@ jobs:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+  download-from-s3:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
+    with:
+      environment: ${{ inputs.environment }}
+      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
+      zip-file: lambda-${{ inputs.release-tag }}.zip
+      artifact-name: lambda-${{ inputs.release-tag }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
   deploy-release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: download-from-s3
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: ${{ inputs.environment }}
-      artifact-source: s3
-      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
+      artifact-name: lambda-${{ inputs.release-tag }}
       zip-file: lambda-${{ inputs.release-tag }}.zip
       version-description: "Deploy [release]: ${{ inputs.release-tag }}"
     secrets:
