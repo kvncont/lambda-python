@@ -1,4 +1,6 @@
 {
-    "ENVIRONMENT": "dev",
-    "MSG": "From Dev environment"
+    "Variables": {
+        "ENVIRONMENT": "dev",
+        "MSG": "From Dev environment"
+    }
 }
