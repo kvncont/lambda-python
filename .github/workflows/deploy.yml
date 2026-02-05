@@ -16,7 +16,7 @@ on:
 
 jobs:
   download-from-s3:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'}}
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
     with:
       environment: ${{ inputs.environment }}
@@ -28,7 +28,7 @@ jobs:
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'}}
     needs: download-from-s3
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
