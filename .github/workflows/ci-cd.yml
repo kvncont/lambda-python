@@ -23,6 +23,7 @@ jobs:
       environment: DEV
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
+      env-file: config/dev-env.json
       version-description: "Deploy ${{ github.ref_name }}: [${{ github.sha }}]"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
