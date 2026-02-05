@@ -1,6 +1,6 @@
 name: Deploy
 
-run-name: ${{ format('Deploy release to {0} - [{1}]', inputs.environment, inputs.release-tag) }}
+run-name: ${{ format('Deploy release to {0} - [{1}]', inputs.environment, github.ref_name) }}
 
 on:
   workflow_dispatch:
@@ -9,10 +9,10 @@ on:
         description: Target environment
         required: true
         type: environment
-      release-tag:
-        description: Release tag to deploy (e.g., 1.0.0)
-        required: true
-        type: string
+      # release-tag:
+      #   description: Release tag to deploy (e.g., 1.0.0)
+      #   required: true
+      #   type: string
 
 jobs:
   download-from-s3:
@@ -20,9 +20,9 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
     with:
       environment: ${{ inputs.environment }}
-      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ inputs.release-tag }}
-      s3-file: lambda-${{ inputs.release-tag }}.zip
-      artifact-name: lambda-${{ inputs.release-tag }}
+      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ github.ref_name }}
+      s3-file: lambda-${{ github.ref_name }}.zip
+      artifact-name: lambda-${{ github.ref_name }}
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -33,9 +33,9 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: ${{ inputs.environment }}
-      artifact-name: lambda-${{ inputs.release-tag }}
-      zip-file: lambda-${{ inputs.release-tag }}.zip
-      version-description: "Deploy release: [${{ inputs.release-tag }}]"
+      artifact-name: lambda-${{ github.ref_name }}
+      zip-file: lambda-${{ github.ref_name }}.zip
+      version-description: "Deploy release: [${{ github.ref_name }}]"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
