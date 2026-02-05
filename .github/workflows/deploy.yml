@@ -34,7 +34,7 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       artifact-name: lambda-${{ github.ref_name }}
-      zip-file: lambda-${{ github.ref_name }}.zipa
+      zip-file: lambda-${{ github.ref_name }}.zip
       env-file: config/${{ inputs.environment }}.json
       version-description: "Deploy release: [${{ github.ref_name }}]"
     secrets:
