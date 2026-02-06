@@ -20,6 +20,8 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
     with:
       environment: ${{ inputs.environment }}
+      aws-region: us-east-1
+      s3-bucket: kvncont-artifacts
       s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ github.ref_name }}
       s3-file: lambda-${{ github.ref_name }}.zip
       artifact-name: lambda-${{ github.ref_name }}
@@ -33,13 +35,8 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: ${{ inputs.environment }}
-      aws-lambda: ${vars.LAMBDA_NAME}-${{ inputs.environment }}
-      aws-region: |
-        ${{ case(
-          inputs.environment,
-          'DR', 'VARS.AWS_REGION_SECONDARY',
-          'VARS.AWS_REGION_PRIMARY'
-        ) }}
+      aws-region: us-east-1
+      lambda-name: lambda-python
       artifact-name: lambda-${{ github.ref_name }}
       zip-file: lambda-${{ github.ref_name }}.zip
       env-file: config/dev.json
