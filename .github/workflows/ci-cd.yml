@@ -22,6 +22,8 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: DEV
+      aws-region: us-east-1
+      lambda-name: lambda-python
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
       env-file: config/dev.json

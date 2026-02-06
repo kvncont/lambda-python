@@ -33,10 +33,18 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: ${{ inputs.environment }}
+      aws-lambda: ${vars.LAMBDA_NAME}-${{ inputs.environment }}
+      aws-region: |
+        ${{ case(
+          inputs.environment,
+          'DR', 'VARS.AWS_REGION_SECONDARY',
+          'VARS.AWS_REGION_PRIMARY'
+        ) }}
       artifact-name: lambda-${{ github.ref_name }}
       zip-file: lambda-${{ github.ref_name }}.zip
       env-file: config/dev.json
       version-description: "Deploy release: [${{ github.ref_name }}]"
+      aws-s3-bucket: my-lambda-deployments
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
