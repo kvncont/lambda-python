@@ -1,0 +1,37 @@
+name: Deploy - DEV
+
+run-name: ${{ format('Deploy release to {0} - [{1}]', 'DEV', github.ref_name) }}
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download-from-s3:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'}}
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
+    with:
+      environment: DEV
+      aws-region: us-east-1
+      s3-bucket: kvncont-artifacts
+      s3-prefix: releases/DEV/${{ github.event.repository.name }}/${{ github.ref_name }}
+      s3-file: lambda-${{ github.ref_name }}.zip
+      artifact-name: lambda-${{ github.ref_name }}
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-dev:
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'}}
+    needs: download-from-s3
+    uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
+    with:
+      environment: DEV
+      aws-region: us-east-1
+      lambda-name: lambda-python
+      artifact-name: lambda-${{ github.ref_name }}
+      zip-file: lambda-${{ github.ref_name }}.zip
+      env-file: config/dev.json
+      version-description: "Deploy release: [${{ github.ref_name }}]"
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

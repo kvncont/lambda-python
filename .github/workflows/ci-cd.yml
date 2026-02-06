@@ -17,7 +17,7 @@ jobs:
       run-tests: true
       run-linting: true
 
-  deploy:
+  deploy-dev:
     needs: build
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:

@@ -1,45 +1,36 @@
-name: Deploy
+name: Deploy - QA
 
-run-name: ${{ format('Deploy release to {0} - [{1}]', inputs.environment, github.ref_name) }}
+run-name: ${{ format('Deploy release to {0} - [{1}]', 'QA', github.ref_name) }}
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: Target environment
-        required: true
-        type: environment
-      # release-tag:
-      #   description: Release tag to deploy (e.g., 1.0.0)
-      #   required: true
-      #   type: string
 
 jobs:
   download-from-s3:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'}}
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
     with:
-      environment: ${{ inputs.environment }}
+      environment: QA
       aws-region: us-east-1
       s3-bucket: kvncont-artifacts
-      s3-prefix: releases/${{ inputs.environment }}/${{ github.event.repository.name }}/${{ github.ref_name }}
+      s3-prefix: releases/QA/${{ github.event.repository.name }}/${{ github.ref_name }}
       s3-file: lambda-${{ github.ref_name }}.zip
       artifact-name: lambda-${{ github.ref_name }}
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  deploy:
+  deploy-qa:
     if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type == 'tag'}}
     needs: download-from-s3
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
-      environment: ${{ inputs.environment }}
+      environment: QA
       aws-region: us-east-1
-      lambda-name: lambda-python
+      lambda-name: lambda-python-qa
       artifact-name: lambda-${{ github.ref_name }}
       zip-file: lambda-${{ github.ref_name }}.zip
-      env-file: config/dev.json
+      env-file: config/qa.json
       version-description: "Deploy release: [${{ github.ref_name }}]"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
