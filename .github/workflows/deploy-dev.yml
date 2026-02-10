@@ -4,11 +4,6 @@ run-name: ${{ format('Deploy release to {0} - [{1}]', 'DEV', github.ref_name) }}
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "config/dev.yml"
 
 jobs:
   get-version:

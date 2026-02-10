@@ -1,3 +1,6 @@
-Variables:
-  ENVIRONMENT: qa
-  MSG: From QA environment
+version: 1.15.14
+
+env-vars:
+  environment: qa
+  msg: From QA environment
+  message: This is the QA environment configuration.
