@@ -51,7 +51,7 @@ jobs:
       lambda-name: lambda-python
       artifact-name: lambda-${{ needs.get-version.outputs.version }}
       zip-file: lambda-${{ needs.get-version.outputs.version }}.zip
-      env-file: config/dev.json
+      env-file: config/dev.yml
       version-description: "Deploy release: [${{ needs.get-version.outputs.version }}]"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
