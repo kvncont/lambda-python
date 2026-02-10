@@ -1,0 +1,3 @@
+Variables:
+  ENVIRONMENT: qa
+  MSG: From QA environment

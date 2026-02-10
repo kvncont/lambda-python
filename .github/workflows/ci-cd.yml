@@ -15,7 +15,21 @@ jobs:
       artifact-name: lambda-${{ github.sha }}
       requirements-file: requirements.txt
       run-tests: true
+      run-coverage: true
       run-linting: true
+
+  code-quality:
+    needs: build
+    uses: kvncont/gh-workflows/.github/workflows/sonar-scan.yml@main
+    with:
+      sonar-organization: ${{ vars.SONAR_ORGANIZATION }}
+      sonar-project-key: ${{ github.owner }}_${{ github.event.repository.name }}
+      sonar-project-name: ${{ github.event.repository.name }}
+      coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
+      coverage-report-path: ${{ needs.build.outputs.coverage-report-path }}
+      fail-on-quality-gate: false
+    secrets:
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   deploy-dev:
     needs: build

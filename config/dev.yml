@@ -1,0 +1,5 @@
+version: 1.4.2
+
+env-vars:
+  environment: dev
+  msg: From Dev environment
