@@ -23,7 +23,7 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/sonar-scan.yml@main
     with:
       sonar-organization: ${{ vars.SONAR_ORGANIZATION }}
-      sonar-project-key: ${{ github.owner }}_${{ github.event.repository.name }}
+      sonar-project-key: ${{ github.repository_owner }}_${{ github.event.repository.name }}
       sonar-project-name: ${{ github.event.repository.name }}
       coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
       coverage-report-path: ${{ needs.build.outputs.coverage-report-path }}
@@ -32,7 +32,7 @@ jobs:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   deploy-dev:
-    needs: build
+    needs: code-quality
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: DEV
