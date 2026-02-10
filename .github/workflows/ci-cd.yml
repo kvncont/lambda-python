@@ -25,7 +25,7 @@ jobs:
       sonar-organization: ${{ vars.SONAR_ORGANIZATION }}
       sonar-project-key: ${{ github.repository_owner }}_${{ github.event.repository.name }}
       sonar-project-name: ${{ github.event.repository.name }}
-      sonar-args: |
+      sonar-args: >
         -Dsonar.python.version=3.14
       coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
       coverage-report-path: ${{ needs.build.outputs.coverage-file }}
