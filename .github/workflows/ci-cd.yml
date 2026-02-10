@@ -26,7 +26,7 @@ jobs:
       sonar-project-key: ${{ github.repository_owner }}_${{ github.event.repository.name }}
       sonar-project-name: ${{ github.event.repository.name }}
       coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
-      coverage-report-path: ${{ needs.build.outputs.coverage-report-path }}
+      coverage-report-path: ${{ needs.build.outputs.coverage-file }}
       fail-on-quality-gate: false
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
