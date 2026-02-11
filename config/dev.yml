@@ -3,4 +3,3 @@ version: 1.15.14
 env-vars:
   environment: dev
   msg: From Dev environment
-  message: This is the development environment configuration.
