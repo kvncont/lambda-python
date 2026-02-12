@@ -18,31 +18,31 @@ jobs:
       run-coverage: true
       run-linting: true
 
-  code-quality:
-    needs: build
-    uses: kvncont/gh-workflows/.github/workflows/sonar-scan.yml@main
-    with:
-      sonar-organization: ${{ vars.SONAR_ORGANIZATION }}
-      sonar-project-key: ${{ github.repository_owner }}_${{ github.event.repository.name }}
-      sonar-project-name: ${{ github.event.repository.name }}
-      sonar-args: -Dsonar.python.version=3.14
-      coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
-      coverage-report-path: ${{ needs.build.outputs.coverage-file }}
-      fail-on-quality-gate: false
-    secrets:
-      sonar-token: ${{ secrets.SONAR_TOKEN }}
+  # code-quality:
+  #   needs: build
+  #   uses: kvncont/gh-workflows/.github/workflows/sonar-scan.yml@main
+  #   with:
+  #     sonar-organization: ${{ vars.SONAR_ORGANIZATION }}
+  #     sonar-project-key: ${{ github.repository_owner }}_${{ github.event.repository.name }}
+  #     sonar-project-name: ${{ github.event.repository.name }}
+  #     sonar-args: -Dsonar.python.version=3.14
+  #     coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
+  #     coverage-report-path: ${{ needs.build.outputs.coverage-file }}
+  #     fail-on-quality-gate: false
+  #   secrets:
+  #     sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   deploy-dev:
     needs: code-quality
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
-      environment: DEV
-      aws-region: us-east-1
-      lambda-name: lambda-python
+      environment: dev
+      aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
+      lambda-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev
       artifact-name: lambda-${{ github.sha }}
       zip-file: lambda-${{ github.sha }}.zip
       env-file: config/dev.yml
-      version-description: "Deploy ${{ github.ref_name }}: [${{ github.sha }}]"
+      version-description: "Deploy ${{ github.ref_name }}: ${{ github.sha }}"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

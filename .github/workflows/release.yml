@@ -38,12 +38,12 @@ jobs:
     needs: build
     strategy:
       matrix:
-        environment: [DEV, QA]
+        environment: [dev, stg, prod]
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@main
     with:
       environment: ${{ matrix.environment }}
-      aws-region: us-east-1
-      s3-bucket: kvncont-artifacts
+      aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
+      s3-bucket: ${{ vars.BUCKET_NAME || github.repository_owner }}-artifacts
       s3-prefix: releases/${{ matrix.environment }}/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}
       artifact-name: lambda-${{ github.event.release.tag_name }}
     secrets:
