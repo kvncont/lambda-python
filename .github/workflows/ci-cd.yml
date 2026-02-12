@@ -11,8 +11,8 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@main
     with:
       python-version: 3.14
-      zip-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.sha }}.zip
-      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.sha }}
+      zip-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}.zip
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}
       requirements-file: requirements.txt
       run-tests: true
       run-coverage: true
@@ -39,8 +39,8 @@ jobs:
       environment: dev
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
       lambda-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev
-      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.sha }}
-      zip-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.sha }}.zip
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}
+      zip-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}.zip
       env-file: config/dev.yml
       version-description: "Deploy ${{ github.ref_name }}: ${{ github.sha }}"
     secrets:
