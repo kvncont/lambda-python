@@ -33,7 +33,7 @@ jobs:
   #     sonar-token: ${{ secrets.SONAR_TOKEN }}
 
   deploy-dev:
-    needs: code-quality
+    needs: build
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
       environment: dev
