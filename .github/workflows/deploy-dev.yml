@@ -1,7 +1,5 @@
 name: Deploy - DEV
 
-run-name: Deploy Release ${{ needs.prepare-deploy.outputs.version }}
-
 on:
   workflow_dispatch:
 
