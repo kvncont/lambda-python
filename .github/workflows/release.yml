@@ -12,8 +12,8 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@main
     with:
       python-version: 3.14
-      zip-name: lambda-${{ github.event.release.tag_name }}.zip
-      artifact-name: lambda-${{ github.event.release.tag_name }}
+      zip-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.event.release.tag_name }}.zip
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.event.release.tag_name }}
       run-tests: false
       run-linting: false
 
@@ -26,7 +26,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v7
         with:
-          name: lambda-${{ github.event.release.tag_name }}
+          name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev-${{ github.event.release.tag_name }}
           path: ./dist
 
       - name: Upload to Release
@@ -45,7 +45,7 @@ jobs:
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
       s3-bucket: ${{ vars.BUCKET_NAME || github.repository_owner }}-artifacts
       s3-prefix: releases/${{ matrix.environment }}/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}
-      artifact-name: lambda-${{ github.event.release.tag_name }}
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ matrix.environment }}-${{ github.event.release.tag_name }}
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
