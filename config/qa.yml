@@ -1,5 +1,0 @@
-version: 1.15.18
-
-env-vars:
-  environment: qa
-  msg: From QA environment

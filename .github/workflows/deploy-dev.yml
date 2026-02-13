@@ -13,8 +13,8 @@ jobs:
     needs: prepare-deploy
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-download.yml@main
     with:
-      environment: dev
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
+      aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
       s3-bucket: ${{ vars.BUCKET_NAME || github.repository_owner }}-artifacts
       s3-prefix: releases/dev/${{ github.event.repository.name }}/${{ needs.prepare-deploy.outputs.version }}
       s3-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ needs.prepare-deploy.outputs.version }}.zip
@@ -29,9 +29,8 @@ jobs:
       - download-from-s3
     uses: kvncont/gh-workflows/.github/workflows/aws-lambda-cd.yml@main
     with:
-      environment: dev
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
-      aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME_DEV || '' }}
+      aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
       lambda-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev
       artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ needs.prepare-deploy.outputs.version }}
       zip-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ needs.prepare-deploy.outputs.version }}.zip

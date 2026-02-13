@@ -11,26 +11,25 @@ jobs:
     uses: kvncont/gh-workflows/.github/workflows/python-ci.yml@main
     with:
       python-version: 3.14
-      zip-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}.zip
-      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}
+      zip-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-latest.zip
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-latest
       requirements-file: requirements.txt
       run-tests: true
       run-coverage: true
       run-linting: true
 
-  # code-quality:
-  #   needs: build
-  #   uses: kvncont/gh-workflows/.github/workflows/sonar-scan.yml@main
-  #   with:
-  #     sonar-organization: ${{ vars.SONAR_ORGANIZATION }}
-  #     sonar-project-key: ${{ github.repository_owner }}_${{ github.event.repository.name }}
-  #     sonar-project-name: ${{ github.event.repository.name }}
-  #     sonar-args: -Dsonar.python.version=3.14
-  #     coverage-artifact-name: ${{ needs.build.outputs.coverage-artifact-name }}
-  #     coverage-report-path: ${{ needs.build.outputs.coverage-file }}
-  #     fail-on-quality-gate: false
-  #   secrets:
-  #     sonar-token: ${{ secrets.SONAR_TOKEN }}
+  upload-to-aws-s3:
+    needs: build
+    uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@main
+    with:
+      aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
+      aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
+      s3-bucket: ${{ vars.BUCKET_NAME || github.repository_owner }}-artifacts
+      s3-prefix: releases/${{ github.event.repository.name }}/latest
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-latest
+    secrets:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy-dev:
     needs: build
@@ -38,11 +37,12 @@ jobs:
     with:
       environment: dev
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
+      aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
       lambda-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-dev
-      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}
-      zip-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.sha }}.zip
+      artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-latest
+      zip-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-latest.zip
       env-file: config/dev.yml
-      version-description: "Deploy ${{ github.ref_name }}: ${{ github.sha }}"
+      version-description: "Deploy ${{ github.ref_name }}: latest (${{ github.sha }})"
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -1,4 +1,4 @@
-version: 1.15.18
+version: latest
 
 env-vars:
   environment: dev

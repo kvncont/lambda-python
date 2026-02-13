@@ -36,15 +36,12 @@ jobs:
 
   upload-to-aws-s3:
     needs: build
-    strategy:
-      matrix:
-        environment: [dev, stg, prod]
     uses: kvncont/gh-workflows/.github/workflows/aws-s3-upload.yml@main
     with:
-      environment: ${{ matrix.environment }}
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
+      aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
       s3-bucket: ${{ vars.BUCKET_NAME || github.repository_owner }}-artifacts
-      s3-prefix: releases/${{ matrix.environment }}/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}
+      s3-prefix: releases/${{ github.event.repository.name }}/${{ github.event.release.tag_name }}
       artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ github.event.release.tag_name }}
     secrets:
       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
