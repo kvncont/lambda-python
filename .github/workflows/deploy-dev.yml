@@ -16,7 +16,7 @@ jobs:
       aws-region: ${{ vars.AWS_PRIMARY_REGION || 'us-east-1' }}
       aws-role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME || '' }}
       s3-bucket: ${{ vars.BUCKET_NAME || github.repository_owner }}-artifacts
-      s3-prefix: releases/dev/${{ github.event.repository.name }}/${{ needs.prepare-deploy.outputs.version }}
+      s3-prefix: releases/${{ github.event.repository.name }}/${{ needs.prepare-deploy.outputs.version }}
       s3-file: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ needs.prepare-deploy.outputs.version }}.zip
       artifact-name: ${{ vars.LAMBDA_NAME || github.event.repository.name }}-${{ needs.prepare-deploy.outputs.version }}
     secrets:
